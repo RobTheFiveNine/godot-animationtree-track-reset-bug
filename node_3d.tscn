@@ -1,0 +1,123 @@
+[gd_scene load_steps=12 format=3 uid="uid://spy4lahyv1in"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_y0mfl"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_giq8s"]
+size = Vector3(0.87, 0.84, 0.6)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2yq7n"]
+albedo_color = Color(0.576471, 0, 0.580392, 1)
+
+[sub_resource type="Animation" id="Animation_jh7vp"]
+resource_name = "anim1"
+length = 4.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Meshes/MeshInstance3D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 2, 3, 4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(-1.01404, 0, 0), Vector3(0, 0, 0), Vector3(0.558505, 0, 0), Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = false
+tracks/1/path = NodePath("Meshes/MeshInstance3D2:mesh:size")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1, 2, 3, 4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0.87, 0.84, 0.6), Vector3(2.845, 0.84, 0.6), Vector3(0.87, 0.84, 0.6), Vector3(2.845, 0.84, 0.6), Vector3(0.87, 0.84, 0.6)]
+}
+
+[sub_resource type="Animation" id="Animation_gankk"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Meshes/MeshInstance3D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = false
+tracks/1/path = NodePath("Meshes/MeshInstance3D2:mesh:size")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(6.735, 0.84, 0.6)]
+}
+
+[sub_resource type="Animation" id="Animation_81hqe"]
+resource_name = "new_animation"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_yv6s1"]
+_data = {
+"RESET": SubResource("Animation_gankk"),
+"anim1": SubResource("Animation_jh7vp"),
+"anim2": SubResource("Animation_81hqe")
+}
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_y0veb"]
+animation = &"anim2"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_x4pyj"]
+animation = &"anim1"
+
+[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_n3cgd"]
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_y1rk4"]
+graph_offset = Vector2(-795.778, -57)
+nodes/Animation/node = SubResource("AnimationNodeAnimation_x4pyj")
+nodes/Animation/position = Vector2(-220, 0)
+"nodes/Animation 2/node" = SubResource("AnimationNodeAnimation_y0veb")
+"nodes/Animation 2/position" = Vector2(-209.061, 215.38)
+nodes/Blend2/node = SubResource("AnimationNodeBlend2_n3cgd")
+nodes/Blend2/position = Vector2(120, 80)
+nodes/output/position = Vector2(340, 140)
+node_connections = [&"Blend2", 0, &"Animation", &"Blend2", 1, &"Animation 2", &"output", 0, &"Blend2"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Meshes" type="Node3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Meshes"]
+transform = Transform3D(1, 0, 0, 0, 2.33672, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("BoxMesh_y0mfl")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Meshes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.651921, 0.503569, -0.00388122)
+mesh = SubResource("BoxMesh_giq8s")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_2yq7n")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_yv6s1")
+}
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+active = false
+libraries = {
+"": SubResource("AnimationLibrary_yv6s1")
+}
+tree_root = SubResource("AnimationNodeBlendTree_y1rk4")
+anim_player = NodePath("../AnimationPlayer")
+parameters/Blend2/blend_amount = 0.0
